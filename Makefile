@@ -1,5 +1,6 @@
 PROJECT_NAME := inventory-platform
 API_DIR := services/api/src
+API_ROOT_DIR := services/api
 FUNCTION_DIR := services/functions/orders_listener
 TERRAFORM_DIR := infra/terraform
 PYTHON := uv run python
@@ -21,7 +22,7 @@ format: # Auto-format code
 	cd $(API_DIR) && uv run ruff format .
 
 export-reqs: # Export requirements.txt from lock file
-	cd $(API_DIR) && uv export --format requirements-txt --output-file requirements.txt
+	cd $(API_ROOT_DIR) && uv export --format requirements-txt --output-file requirements.txt
 
 # Local Docker
 DOCKER_IMAGE := inventory-api

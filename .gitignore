@@ -21,3 +21,8 @@ override.tf.json
 .terraform.tfstate.lock.info
 .terraformrc
 terraform.rc
+
+# local dev
+firebase-export*
+firebase-debug.log
+firestore-debug.log

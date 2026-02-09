@@ -1,0 +1,52 @@
+services:
+  firestore:
+    image: andreysenov/firebase-tools:latest
+    working_dir: /workspace
+    command: >
+      firebase emulators:start
+      --config /workspace/infra/local/firebase.json
+      --only firestore,ui
+      --project demo-inventory
+      --import=/workspace/.firebase-data
+      --export-on-exit
+    ports:
+      - "8080:8080"
+      - "4000:4000"
+    volumes:
+      - ./:/workspace
+      - firestore_data:/workspace/.firebase-data
+
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    depends_on:
+      - firestore
+    ports:
+      - "8000:8080"
+    environment:
+      FIRESTORE_EMULATOR_HOST: firestore:8080
+      GOOGLE_CLOUD_PROJECT: demo-inventory
+      GCP_PROJECT_ID: demo-inventory
+      JWT_SECRET: dev-secret
+      JWT_EXPIRES_MINUTES: "60"
+      JWT_ALGORITHM: HS256
+
+  seed:
+    image: python:3.13-slim
+    working_dir: /workspace
+    depends_on:
+      - firestore
+    environment:
+      FIRESTORE_EMULATOR_HOST: firestore:8080
+      GOOGLE_CLOUD_PROJECT: demo-inventory
+    volumes:
+      - ./:/workspace
+    command: >
+      sh -lc "
+        pip install --no-cache-dir google-cloud-firestore &&
+        python infra/local/seed_firestore_emulator.py
+      "
+
+volumes:
+  firestore_data:
