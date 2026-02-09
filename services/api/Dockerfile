@@ -19,7 +19,7 @@ WORKDIR /app
 
 COPY --from=builder /usr/local /usr/local
 
-COPY services/api /app/src
+COPY services/api/src /app/src
 
 ENV PORT=8080
 USER 10001

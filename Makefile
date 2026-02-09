@@ -1,5 +1,5 @@
 PROJECT_NAME := inventory-platform
-API_DIR := services/api
+API_DIR := services/api/src
 FUNCTION_DIR := services/functions/orders_listener
 TERRAFORM_DIR := infra/terraform
 PYTHON := uv run python
