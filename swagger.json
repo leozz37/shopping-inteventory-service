@@ -13,34 +13,7 @@
       "http"
    ],
    "paths":{
-      "/health":{
-         "get":{
-            "produces":[
-               "application/json"
-            ],
-            "parameters":[
-               
-            ],
-            "responses":{
-               "200":{
-                  "description":"OK",
-                  "schema":{
-                     "properties":{
-                        "status":{
-                           "example":"ok",
-                           "type":"string"
-                        }
-                     },
-                     "type":"object"
-                  }
-               }
-            },
-            "description":"Health check",
-            "operationId":"healthCheck",
-            "summary":"Health check"
-         }
-      },
-      "/login":{
+      "/auth/login":{
          "post":{
             "consumes":[
                "application/json"
@@ -96,6 +69,91 @@
             "description":"Login and return JWT",
             "operationId":"loginAndReturnJwt",
             "summary":"Login and return JWT"
+         }
+      },
+      "/auth/register":{
+         "post":{
+            "consumes":[
+               "application/json"
+            ],
+            "produces":[
+               "application/json"
+            ],
+            "parameters":[
+               {
+                  "in":"body",
+                  "name":"body",
+                  "schema":{
+                     "properties":{
+                        "email":{
+                           "example":"user@example.com",
+                           "type":"string"
+                        },
+                        "password":{
+                           "example":"MySecurePass123",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"User created",
+                  "schema":{
+                     "properties":{
+                        "message":{
+                           "example":"user created",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               },
+               "400":{
+                  "description":"Validation error",
+                  "schema":{
+                     "properties":{
+                        "detail":{
+                           "example":"user not created",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               }
+            },
+            "description":"Register a new user",
+            "operationId":"registerANewUser",
+            "summary":"Register a new user"
+         }
+      },
+      "/health":{
+         "get":{
+            "produces":[
+               "application/json"
+            ],
+            "parameters":[
+               
+            ],
+            "responses":{
+               "200":{
+                  "description":"OK",
+                  "schema":{
+                     "properties":{
+                        "status":{
+                           "example":"ok",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               }
+            },
+            "description":"Health check",
+            "operationId":"healthCheck",
+            "summary":"Health check"
          }
       },
       "/orders/place":{
@@ -154,64 +212,6 @@
             "description":"Place an order",
             "operationId":"placeAnOrder",
             "summary":"Place an order"
-         }
-      },
-      "/register":{
-         "post":{
-            "consumes":[
-               "application/json"
-            ],
-            "produces":[
-               "application/json"
-            ],
-            "parameters":[
-               {
-                  "in":"body",
-                  "name":"body",
-                  "schema":{
-                     "properties":{
-                        "email":{
-                           "example":"user@example.com",
-                           "type":"string"
-                        },
-                        "password":{
-                           "example":"MySecurePass123",
-                           "type":"string"
-                        }
-                     },
-                     "type":"object"
-                  }
-               }
-            ],
-            "responses":{
-               "200":{
-                  "description":"User created",
-                  "schema":{
-                     "properties":{
-                        "message":{
-                           "example":"user created",
-                           "type":"string"
-                        }
-                     },
-                     "type":"object"
-                  }
-               },
-               "400":{
-                  "description":"Validation error",
-                  "schema":{
-                     "properties":{
-                        "detail":{
-                           "example":"user not created",
-                           "type":"string"
-                        }
-                     },
-                     "type":"object"
-                  }
-               }
-            },
-            "description":"Register a new user",
-            "operationId":"registerANewUser",
-            "summary":"Register a new user"
          }
       }
    },
