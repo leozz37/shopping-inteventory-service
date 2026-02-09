@@ -1,0 +1,195 @@
+openapi: 3.0.3
+info:
+  title: Inventory API
+  version: "1.0.0"
+servers:
+  - url: http://localhost:8000
+    description: Local
+  - url: https://CLOUD_RUN_URL
+    description: Cloud Run
+
+tags:
+  - name: Health
+  - name: Auth
+  - name: Orders
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: Out of stock
+      required: [detail]
+
+    RegisterRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: MySecurePass123
+      required: [email, password]
+
+    RegisterResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: user created
+      required: [message]
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: MySecurePass123
+      required: [email, password]
+
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      required: [access_token]
+
+    PlaceOrderRequest:
+      type: object
+      properties:
+        buyer_email:
+          type: string
+          format: email
+          example: buyer@example.com
+        product_id:
+          type: string
+          example: product-123
+      required: [buyer_email, product_id]
+
+    OrderPlacedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: order placed
+      required: [status]
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                required: [status]
+
+  /register:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "200":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /login:
+    post:
+      tags: [Auth]
+      summary: Login and return JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: JWT issued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Invalid credentials
+                required: [detail]
+
+  /place:
+    post:
+      tags: [Orders]
+      summary: Place an order
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaceOrderRequest"
+      responses:
+        "200":
+          description: Order placed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderPlacedResponse"
+        "401":
+          description: Missing/invalid JWT
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Out of stock
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
