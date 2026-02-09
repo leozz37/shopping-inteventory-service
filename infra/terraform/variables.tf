@@ -1,11 +1,11 @@
 variable "project_id" { type = string }
-variable "region"     { 
-    type = string  
-    default = "us-central1"
+variable "region" {
+  type    = string
+  default = "us-central1"
 }
-variable "app_name"   { 
-    type = string  
-    default = "orders-api" 
+variable "app_name" {
+  type    = string
+  default = "orders-api"
 }
 
 variable "cloud_run_image" { type = string }

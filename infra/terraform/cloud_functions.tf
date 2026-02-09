@@ -6,8 +6,8 @@ resource "google_service_account" "fn_sa" {
 # Permissions: read Firestore + write logs (add Secret Manager if used)
 resource "google_project_iam_member" "fn_firestore_user" {
   project = var.project_id
-  role   = "roles/datastore.user"
-  member = "serviceAccount:${google_service_account.fn_sa.email}"
+  role    = "roles/datastore.user"
+  member  = "serviceAccount:${google_service_account.fn_sa.email}"
 }
 
 resource "google_cloudfunctions2_function" "orders_listener" {
