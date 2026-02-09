@@ -1,4 +1,4 @@
-name: Pytets API
+name: Pytest API
 
 on:
   push:
