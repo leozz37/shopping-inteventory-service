@@ -1,0 +1,221 @@
+{
+   "swagger":"2.0",
+   "info":{
+      "contact":{
+         
+      },
+      "title":"Inventory API",
+      "version":"1.0.0"
+   },
+   "host":"localhost:8000",
+   "basePath":"/",
+   "schemes":[
+      "http"
+   ],
+   "paths":{
+      "/health":{
+         "get":{
+            "produces":[
+               "application/json"
+            ],
+            "parameters":[
+               
+            ],
+            "responses":{
+               "200":{
+                  "description":"OK",
+                  "schema":{
+                     "properties":{
+                        "status":{
+                           "example":"ok",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               }
+            },
+            "description":"Health check",
+            "operationId":"healthCheck",
+            "summary":"Health check"
+         }
+      },
+      "/login":{
+         "post":{
+            "consumes":[
+               "application/json"
+            ],
+            "produces":[
+               "application/json"
+            ],
+            "parameters":[
+               {
+                  "in":"body",
+                  "name":"body",
+                  "schema":{
+                     "properties":{
+                        "email":{
+                           "example":"user@example.com",
+                           "type":"string"
+                        },
+                        "password":{
+                           "example":"MySecurePass123",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"JWT issued",
+                  "schema":{
+                     "properties":{
+                        "access_token":{
+                           "example":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               },
+               "401":{
+                  "description":"Invalid credentials",
+                  "schema":{
+                     "properties":{
+                        "detail":{
+                           "example":"Invalid credentials",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               }
+            },
+            "description":"Login and return JWT",
+            "operationId":"loginAndReturnJwt",
+            "summary":"Login and return JWT"
+         }
+      },
+      "/orders/place":{
+         "post":{
+            "consumes":[
+               "application/json"
+            ],
+            "produces":[
+               "application/json"
+            ],
+            "parameters":[
+               {
+                  "in":"body",
+                  "name":"body",
+                  "schema":{
+                     "properties":{
+                        "buyer_email":{
+                           "example":"buyer@example.com",
+                           "type":"string"
+                        },
+                        "product_id":{
+                           "example":"product-1",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"Order placed",
+                  "schema":{
+                     "properties":{
+                        "status":{
+                           "example":"order placed",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               },
+               "409":{
+                  "description":"Out of stock",
+                  "schema":{
+                     "properties":{
+                        "detail":{
+                           "example":"Out of stock",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               }
+            },
+            "description":"Place an order",
+            "operationId":"placeAnOrder",
+            "summary":"Place an order"
+         }
+      },
+      "/register":{
+         "post":{
+            "consumes":[
+               "application/json"
+            ],
+            "produces":[
+               "application/json"
+            ],
+            "parameters":[
+               {
+                  "in":"body",
+                  "name":"body",
+                  "schema":{
+                     "properties":{
+                        "email":{
+                           "example":"user@example.com",
+                           "type":"string"
+                        },
+                        "password":{
+                           "example":"MySecurePass123",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"User created",
+                  "schema":{
+                     "properties":{
+                        "message":{
+                           "example":"user created",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               },
+               "400":{
+                  "description":"Validation error",
+                  "schema":{
+                     "properties":{
+                        "detail":{
+                           "example":"user not created",
+                           "type":"string"
+                        }
+                     },
+                     "type":"object"
+                  }
+               }
+            },
+            "description":"Register a new user",
+            "operationId":"registerANewUser",
+            "summary":"Register a new user"
+         }
+      }
+   },
+   "tags":[
+      
+   ]
+}
