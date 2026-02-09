@@ -3,11 +3,13 @@ from security.jwt import create_token
 
 router = APIRouter()
 
+
 @router.post("/register")
 def register(email: str, password: str):
     # TODO: create email method
 
     return {"message": "user created"}
+
 
 @router.post("/login")
 def login(email: str, password: str):

@@ -4,6 +4,7 @@ from security.jwt import decode_token
 
 security = HTTPBearer()
 
+
 def require_user(creds=Depends(security)):
     payload = decode_token(creds.credentials)
     if not payload:

@@ -2,10 +2,12 @@ from datetime import datetime, timedelta
 from jose import jwt
 from config import JWT_SECRET, JWT_ALGORITHM, JWT_EXPIRES_MINUTES
 
+
 def create_token(data: dict) -> str:
     payload = data.copy()
     payload["exp"] = datetime.utcnow() + timedelta(minutes=JWT_EXPIRES_MINUTES)
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
 
 def decode_token(token: str):
     try:
