@@ -8,8 +8,6 @@ variable "app_name" {
   default = "orders-api"
 }
 
-variable "cloud_run_image" { type = string }
-
 variable "jwt_secret_value" {
   type        = string
   description = "JWT signing secret (store outside git)."
