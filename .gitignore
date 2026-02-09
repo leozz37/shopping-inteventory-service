@@ -13,7 +13,6 @@ requirements.txt
 .terraform.lock.hcl
 *.tfstate
 *.tfstate.*
-*.tfvars
 *.tfvars.json
 override.tf
 override.tf.json
