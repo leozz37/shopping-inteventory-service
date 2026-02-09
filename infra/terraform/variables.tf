@@ -8,12 +8,29 @@ variable "app_name"   {
     default = "orders-api" 
 }
 
-# Image URI to deploy Cloud Run (you build/push it via gcloud)
 variable "cloud_run_image" { type = string }
 
-# Mail provider settings (put secrets in Secret Manager in a real take-home)
-variable "mail_provider_base_url" { type = string }
-variable "mail_provider_api_key"  { 
-    type = string 
-    sensitive = true
+variable "jwt_secret_value" {
+  type        = string
+  description = "JWT signing secret (store outside git)."
+  sensitive   = true
+}
+
+variable "jwt_expires_minutes" {
+  type        = number
+  description = "Access token expiration in minutes"
+  default     = 60
+}
+
+variable "api_image" {
+  type = string
+}
+
+variable "mail_provider_base_url" {
+  type = string
+}
+
+variable "mail_provider_api_key" {
+  type      = string
+  sensitive = true
 }
