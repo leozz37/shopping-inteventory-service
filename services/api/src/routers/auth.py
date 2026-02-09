@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from security.jwt import create_token
 
 router = APIRouter()
 
@@ -11,9 +12,10 @@ def register(email: str, password: str):
 @router.post("/login")
 def login(email: str, password: str):
     # TODO: auth user
+
     user_id = "hello world"
     if not user_id:
         raise HTTPException(status_code=401)
-    # TODO: create token
 
-    return {"access_token": "hello world"}
+    token = create_token({"sub": user_id, "email": email})
+    return {"access_token": token}
