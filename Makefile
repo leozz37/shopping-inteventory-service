@@ -21,4 +21,27 @@ format: # Auto-format code
 	cd $(API_DIR) && uv run ruff format .
 
 export-reqs: # Export requirements.txt from lock file
-	cd $(API_DIR) && uv export --format requirements-txt --output requirements.txt
+	cd $(API_DIR) && uv export --format requirements-txt --output-file requirements.txt
+
+# Local Docker
+DOCKER_IMAGE := inventory-api
+DOCKERFILE := ./services/api/Dockerfile
+DOCKER_CONTEXT := .
+
+docker-build: # Build API Docker image
+	docker build \
+		-t $(DOCKER_IMAGE) \
+		-f $(DOCKERFILE) \
+		$(DOCKER_CONTEXT)
+
+docker-run: # Run API container locally
+	docker run --rm \
+		-p 8000:8080 \
+		--env-file .env \
+		$(DOCKER_IMAGE)
+
+docker-up: # Run API using docker-compose
+	docker-compose up --build
+
+docker-down: # Stop docker-compose
+	docker-compose down

@@ -4,6 +4,10 @@
 .ruff_cache
 __pycache__
 
+# deps being generated from pyproject file, this is only for
+# cloud run deployments
+requirements.txt
+
 # Terraform
 .terraform/
 .terraform.lock.hcl
