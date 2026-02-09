@@ -13,6 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file ./services/api/Dockerfile --tag my-image-name:$(date +%s)
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -Ls https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Export requirements.txt
+        working-directory: services/api
+        run: |
+          uv export --format requirements-txt --output-file requirements.txt
+          
+      - name: Build the Docker image
+        run: docker build . --file ./services/api/Dockerfile --tag my-image-name:$(date +%s)
