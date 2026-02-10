@@ -1,5 +1,5 @@
 from google.cloud import firestore
-from services.firestore import products_ref, orders_ref
+from src.services.firestore import products_ref, orders_ref
 
 db = firestore.Client()
 

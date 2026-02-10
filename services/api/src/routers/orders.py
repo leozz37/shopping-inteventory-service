@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, EmailStr
 
-from deps import require_user
-from services.inventory import place_order
+from src.deps import require_user
+from src.services.inventory import place_order
 
 router = APIRouter()
 

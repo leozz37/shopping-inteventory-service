@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers import health, auth, orders
+from src.routers import health, auth, orders
 
 app = FastAPI(title="Inventory API")
 
