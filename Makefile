@@ -15,7 +15,7 @@ run: # Run FastAPI locally with reload
 	cd $(API_DIR) && uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 test: # Run unit tests
-	cd $(API_ROOT_DIR) && uv run pytest -v --tb=short
+	cd $(API_ROOT_DIR) && uv run pytest . -v --cov=src --cov-report=term-missing
 
 lint: # Run linter (ruff)
 	cd $(API_DIR) && uv run ruff check .
