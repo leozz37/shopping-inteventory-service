@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "argon2-cffi>=25.1.0",
     "fastapi>=0.128.5",
+    "functions-framework>=3.10.0",
     "google-cloud-firestore>=2.23.0",
     "passlib[argon2]>=1.7.4",
     "pydantic-settings>=2.12.0",
@@ -18,6 +19,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "functions-framework>=3.10.0",
     "httpx>=0.28.1",
     "mypy>=1.19.1",
     "pytest>=9.0.2",

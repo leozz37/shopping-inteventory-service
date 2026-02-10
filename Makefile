@@ -4,6 +4,8 @@ API_ROOT_DIR := services/api
 FUNCTION_DIR := services/functions/orders_listener
 TERRAFORM_DIR := infra/terraform
 PYTHON := uv run python
+ORDERS_FN_DIR := services/orders_listener
+ORDERS_FN_ZIP := dist/orders_listener.zip
 
 # Local DEV
 install: # Install dependencies (uv)
@@ -19,7 +21,7 @@ lint: # Run linter (ruff)
 	cd $(API_DIR) && uv run ruff check .
 
 format: # Auto-format code
-	cd $(API_DIR) && uv run ruff format .
+	cd services && uv run ruff format .
 
 export-reqs: # Export requirements.txt from lock file
 	cd $(API_ROOT_DIR) && uv export --format requirements-txt --output-file requirements.txt
@@ -46,3 +48,22 @@ docker-up: # Run API using docker-compose
 
 docker-down: # Stop docker-compose
 	docker-compose down
+
+.PHONY: orders-fn-zip
+orders-fn-zip:
+	@echo "📦 Building orders_listener Cloud Function zip"
+	@mkdir -p dist
+	@cd $(ORDERS_FN_DIR) && zip -r ../../$(ORDERS_FN_ZIP) . > /dev/null
+	@echo "✅ Created $(ORDERS_FN_ZIP)"
+
+# Terraform
+TF_DIR := infra/terraform
+TF_VARS_DEV := envs/dev/terraform.tfvars
+
+.PHONY: tf-plan
+tf-plan:
+	cd $(TF_DIR) && terraform plan -var-file=$(TF_VARS_DEV)
+
+.PHONY: tf-apply-auto
+tf-apply:
+	cd $(TF_DIR) && terraform apply -auto-approve -var-file=$(TF_VARS_DEV)

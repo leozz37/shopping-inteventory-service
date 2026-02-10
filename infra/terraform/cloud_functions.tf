@@ -28,8 +28,14 @@ resource "google_cloudfunctions2_function" "orders_listener" {
   service_config {
     service_account_email = google_service_account.fn_sa.email
     environment_variables = {
-      MAIL_PROVIDER_BASE_URL = var.mail_provider_base_url
-      MAIL_PROVIDER_API_KEY  = var.mail_provider_api_key
+      GCP_PROJECT_ID = var.project_id
+
+      SMTP_HOST     = var.SMTP_HOST
+      SMTP_PORT     = tostring(var.SMTP_PORT)
+      SMTP_PASSWORD = var.SMTP_PASSWORD
+      SMTP_USER     = var.SMTP_USER
+      SMTP_FROM     = var.SMTP_FROM
+      SMTP_USE_TLS  = "true"
     }
   }
 
@@ -45,6 +51,7 @@ resource "google_cloudfunctions2_function" "orders_listener" {
     event_filters {
       attribute = "document"
       value     = "Orders/{orderId}"
+      operator  = "match-path-pattern"
     }
   }
 

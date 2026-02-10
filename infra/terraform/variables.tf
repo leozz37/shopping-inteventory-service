@@ -8,6 +8,10 @@ variable "app_name" {
   default = "orders-api"
 }
 
+variable "api_image" {
+  type = string
+}
+
 variable "jwt_secret_value" {
   type        = string
   description = "JWT signing secret (store outside git)."
@@ -20,15 +24,27 @@ variable "jwt_expires_minutes" {
   default     = 60
 }
 
-variable "api_image" {
+variable "SMTP_HOST" {
   type = string
 }
 
-variable "mail_provider_base_url" {
+variable "SMTP_PORT" {
   type = string
 }
 
-variable "mail_provider_api_key" {
+variable "SMTP_USER" {
+  type = string
+}
+
+variable "SMTP_FROM" {
+  type = string
+}
+
+variable "SMTP_USE_TLS" {
+  type = string
+}
+
+variable "SMTP_PASSWORD" {
   type      = string
   sensitive = true
 }
