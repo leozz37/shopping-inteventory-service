@@ -1,4 +1,3 @@
-import os
 import pytest
 from fastapi.testclient import TestClient
 
@@ -14,6 +13,6 @@ def _test_env(monkeypatch):
 @pytest.fixture
 def client():
     from src.main import app
-    # Clear any previous overrides
+
     app.dependency_overrides.clear()
     return TestClient(app)

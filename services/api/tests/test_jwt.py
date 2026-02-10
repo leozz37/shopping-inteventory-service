@@ -1,6 +1,7 @@
 import time
 import pytest
 
+
 def test_create_and_verify_token_roundtrip():
     import src.security.jwt as jwt_mod
 
