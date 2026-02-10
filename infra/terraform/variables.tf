@@ -46,5 +46,4 @@ variable "SMTP_USE_TLS" {
 
 variable "SMTP_PASSWORD" {
   type      = string
-  sensitive = true
 }
