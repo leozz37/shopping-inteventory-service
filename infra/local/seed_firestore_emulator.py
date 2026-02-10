@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 import os
 from google.cloud import firestore
 
-PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT", "demo-inventory")
+PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT", "dshopping-inventory-service")
 db = firestore.Client(project=PROJECT)
 
 def main():

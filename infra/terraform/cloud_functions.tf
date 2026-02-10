@@ -16,7 +16,7 @@ resource "google_cloudfunctions2_function" "orders_listener" {
 
   build_config {
     runtime     = "python312"
-    entry_point = "on_order_created"
+    entry_point = "orders_listener"
     source {
       storage_source {
         bucket = google_storage_bucket.fn_source.name
@@ -36,9 +36,15 @@ resource "google_cloudfunctions2_function" "orders_listener" {
   event_trigger {
     trigger_region = var.region
     event_type     = "google.cloud.firestore.document.v1.created"
+
+    event_filters {
+      attribute = "database"
+      value     = "(default)"
+    }
+
     event_filters {
       attribute = "document"
-      value     = "projects/${var.project_id}/databases/(default)/documents/orders/{orderId}"
+      value     = "Orders/{orderId}"
     }
   }
 

@@ -211,3 +211,10 @@ JWT_EXPIRE_MINUTES=60
 ```
 
 Make sure these are set locally, in Docker, and (when applicable) via Terraform-managed secrets or environment variables.
+
+## WIP
+
+- local dev requirements
+    - gcloud auth configure-docker us-docker.pkg.dev
+    - gcloud login
+    - select project
