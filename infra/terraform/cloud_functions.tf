@@ -28,7 +28,7 @@ resource "google_cloudfunctions_function" "orders_listener" {
     SMTP_PORT     = var.SMTP_PORT
     SMTP_USER     = var.SMTP_USER
     SMTP_FROM     = var.SMTP_FROM
-    SMTP_USE_TLS = var.SMTP_USE_TLS
+    SMTP_USE_TLS  = var.SMTP_USE_TLS
     SMTP_PASSWORD = var.SMTP_PASSWORD
   }
 

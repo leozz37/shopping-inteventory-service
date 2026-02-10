@@ -3,6 +3,7 @@
 .venv/
 .ruff_cache
 __pycache__
+.pytest_cache
 
 # deps being generated from pyproject file, this is only for
 # cloud run deployments
