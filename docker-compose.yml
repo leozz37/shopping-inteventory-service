@@ -5,10 +5,8 @@ services:
     command: >
       firebase emulators:start
       --config /workspace/infra/local/firebase.json
-      --only firestore,ui
+      --only firestore
       --project demo-inventory
-      --import=/workspace/.firebase-data
-      --export-on-exit
     ports:
       - "8080:8080"
       - "4000:4000"
