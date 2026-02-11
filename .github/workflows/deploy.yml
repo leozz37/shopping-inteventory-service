@@ -54,7 +54,6 @@ jobs:
         working-directory: infra/terraform
         run: |
           terraform apply -auto-approve \
-            -var-file=envs/dev/terraform.tfvars \
             -var="api_image=${{ secrets.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.REGISTRY_NAME }}/inventory-api:${{ github.sha }}" \
             -var="jwt_secret_value=${{ secrets.JWT_SECRET }}" \
             -var="SMTP_HOST=${{ secrets.SMTP_HOST }}" \
