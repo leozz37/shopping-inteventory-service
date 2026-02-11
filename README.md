@@ -254,22 +254,3 @@ make format
 ## Notebook Demo
 
 To try the API from a step-by-step notebook (health, register, login, place order, and Firestore seed), open [notebooks/inventory_api_from_swagger.ipynb](notebooks/inventory_api_from_swagger.ipynb).
-
-## Environment Variables
-
-Check the [`.env.example`](./services/api/src/.env.example) to see the required and defaults env vars:
-
-```env
-JWT_SECRET=super-secret-key
-JWT_ALGORITHM=HS256
-JWT_EXPIRE_MINUTES=60
-```
-
-Make sure these are set locally, in Docker, and (when applicable) via Terraform-managed secrets or environment variables.
-
-## WIP
-
-- local dev requirements
-    - gcloud auth configure-docker us-docker.pkg.dev
-    - gcloud login
-    - select project
