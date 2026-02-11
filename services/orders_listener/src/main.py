@@ -43,6 +43,12 @@ def orders_listener(event, context):
         raise e
 
 
+def orders_listener_http(request):
+    event = request.get_json(silent=True) or {}
+    orders_listener(event, None)
+    return ("", 204)
+
+
 def _get_string(fields: dict, name: str) -> str | None:
     field_data = fields.get(name)
     if isinstance(field_data, dict) and "stringValue" in field_data:

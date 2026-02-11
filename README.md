@@ -189,6 +189,12 @@ Run all tests:
 make test
 ```
 
+Run integration tests (brings up docker-compose, waits for API/orders_listener/MailHog, then exercises the full flow):
+
+```bash
+make test-integration
+```
+
 ## Running Linters
 
 Ruff is the default linter. To run it:

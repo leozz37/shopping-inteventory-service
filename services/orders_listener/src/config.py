@@ -10,8 +10,8 @@ def env(name: str, default: str | None = None) -> str:
 
 SMTP_HOST = env("SMTP_HOST")
 SMTP_PORT = int(env("SMTP_PORT", "587"))
-SMTP_USER = env("SMTP_USER")
-SMTP_PASSWORD = env("SMTP_PASSWORD")
+SMTP_USER = os.getenv("SMTP_USER", "")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
 
 SMTP_FROM = env("SMTP_FROM")
 SMTP_USE_TLS = env("SMTP_USE_TLS", "true").lower() == "true"

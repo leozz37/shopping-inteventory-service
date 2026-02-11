@@ -23,5 +23,6 @@ def send_email(to_email: str, subject: str, body: str) -> None:
         if SMTP_USE_TLS:
             server.starttls()
             server.ehlo()
-        server.login(SMTP_USER, SMTP_PASSWORD)
+        if SMTP_USER and SMTP_PASSWORD:
+            server.login(SMTP_USER, SMTP_PASSWORD)
         server.send_message(msg)

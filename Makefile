@@ -67,6 +67,29 @@ docker-up: # Run API using docker-compose
 docker-down: # Stop docker-compose
 	docker-compose down
 
+.PHONY: test-integration
+test-integration: # Run docker-compose (if needed) and integration tests
+	@if [ -z "$$(docker-compose ps -q)" ]; then \
+		echo "Starting docker-compose..."; \
+		docker-compose up -d --build; \
+	fi
+	@echo "Waiting for orders_listener..."
+	@i=0; \
+	until curl -s http://localhost:8081/ >/dev/null 2>&1; do \
+		i=$$((i+1)); \
+		if [ $$i -ge 30 ]; then echo "orders_listener not ready"; exit 1; fi; \
+		sleep 1; \
+	done
+	@echo "Waiting for MailHog..."
+	@i=0; \
+	until curl -s http://localhost:8025/ >/dev/null 2>&1; do \
+		i=$$((i+1)); \
+		if [ $$i -ge 30 ]; then echo "MailHog not ready"; exit 1; fi; \
+		sleep 1; \
+	done
+	pytest integration_tests -v
+	docker compose down
+
 .PHONY: orders-fn-zip
 orders-fn-zip:
 	@echo "📦 Building orders_listener Cloud Function zip"
