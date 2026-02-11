@@ -96,7 +96,7 @@ test-integration: # Run docker compose (if needed) and integration tests
 orders-fn-zip:
 	@echo "📦 Building orders_listener Cloud Function zip"
 	@mkdir -p dist
-	@cd $(ORDERS_FN_DIR) && zip -r ../../$(ORDERS_FN_ZIP) . > /dev/null
+	@cd $(ORDERS_FN_DIR) && zip -r $(CURDIR)/$(ORDERS_FN_ZIP) . > /dev/null
 	@echo "✅ Created $(ORDERS_FN_ZIP)"
 
 # Terraform

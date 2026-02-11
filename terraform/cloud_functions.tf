@@ -44,5 +44,5 @@ resource "google_storage_bucket" "fn_source" {
 resource "google_storage_bucket_object" "fn_zip" {
   name   = "orders_listener.zip"
   bucket = google_storage_bucket.fn_source.name
-  source = "${path.module}/../..//dist/orders_listener.zip"
+  source = "${path.module}/../dist/orders_listener.zip"
 }
