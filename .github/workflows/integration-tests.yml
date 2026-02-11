@@ -61,7 +61,7 @@ jobs:
           done
 
       - name: Run integration tests
-        run: pytest integration_tests -v
+        run: uv run pytest integration_tests -v
 
       - name: Compose logs on failure
         if: failure()
