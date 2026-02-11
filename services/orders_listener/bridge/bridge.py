@@ -1,6 +1,5 @@
 import logging
 import os
-import threading
 import time
 from typing import Any
 
@@ -51,35 +50,30 @@ def main() -> None:
     client = firestore.Client(project=PROJECT_ID)
     collection = client.collection(ORDERS_COLLECTION)
 
-    initialized = False
     seen_ids: set[str] = set()
-    stop_event = threading.Event()
+    poll_interval = float(os.getenv("BRIDGE_POLL_INTERVAL", "2"))
+    initialized = False
 
-    def on_snapshot(col_snapshot, changes, read_time):
-        nonlocal initialized
-        if not initialized:
-            for doc in col_snapshot:
-                seen_ids.add(doc.id)
-            initialized = True
-            logging.info("Initialized snapshot with %d docs", len(seen_ids))
-            return
+    while True:
+        try:
+            docs = list(collection.stream())
+            if not initialized:
+                for doc in docs:
+                    seen_ids.add(doc.id)
+                initialized = True
+                logging.info("Initialized polling with %d docs", len(seen_ids))
+            else:
+                for doc in docs:
+                    if doc.id in seen_ids:
+                        continue
+                    seen_ids.add(doc.id)
+                    data = doc.to_dict() or {}
+                    logging.info("New order detected: %s", doc.id)
+                    _send_event(doc.id, data)
+        except Exception as exc:
+            logging.info("Polling error: %s", exc)
 
-        for change in changes:
-            doc = change.document
-            if doc.id in seen_ids:
-                continue
-            seen_ids.add(doc.id)
-            data = doc.to_dict() or {}
-            logging.info("New order detected: %s", doc.id)
-            _send_event(doc.id, data)
-
-    watch = collection.on_snapshot(on_snapshot)
-
-    try:
-        while not stop_event.is_set():
-            time.sleep(1)
-    finally:
-        watch.unsubscribe()
+        time.sleep(poll_interval)
 
 
 if __name__ == "__main__":

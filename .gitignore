@@ -28,7 +28,9 @@ terraform/envs/dev/*
 firebase-export*
 firebase-debug.log
 firestore-debug.log
+.firebase-home
 .firebase-data
 dist
 .vscode
 .coverage
+ui-debug.log

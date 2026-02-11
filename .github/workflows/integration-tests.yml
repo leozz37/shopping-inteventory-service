@@ -99,6 +99,12 @@ jobs:
           else
             echo "firestore container not found"
           fi
+          if [ -f firestore-debug.log ]; then
+            ls -la firestore-debug.log
+            cat firestore-debug.log
+          else
+            echo "firestore-debug.log not found on host"
+          fi
 
       - name: Upload firestore debug log
         if: failure()

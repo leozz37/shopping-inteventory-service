@@ -1,14 +1,15 @@
 services:
   firestore:
-    image: andreysenov/firebase-tools:latest
-    working_dir: /workspace
+    image: node:20-bullseye
+    working_dir: /workspace/integration_tests
+    environment:
+      FIREBASE_DEBUG_LOG: /workspace/firestore-debug.log
+      FIREBASE_DEBUG_MODE: "true"
+      FIREBASE_CONFIG: /workspace/integration_tests/firebase.json
+      FIREBASE_EMULATORS_DISABLE_TELEMETRY: "1"
+      HOME: /workspace/.firebase-home
     command: >
-      firebase emulators:start
-      --config /workspace/integration_tests/firebase.json
-      --only firestore,ui
-      --project demo-inventory
-      --import=/workspace/.firebase-data
-      --export-on-exit
+      sh -lc "apt-get update && apt-get install -y --no-install-recommends default-jre-headless && npm i -g firebase-tools@13.7.1 && ls -la /workspace/integration_tests/firebase.json && firebase emulators:start --config /workspace/integration_tests/firebase.json --only firestore,ui --project demo-inventory --import=/workspace/.firebase-data --export-on-exit"
     ports:
       - "8080:8080"
       - "4000:4000"
@@ -48,7 +49,8 @@ services:
     command: >
       sh -lc "
         pip install --no-cache-dir google-cloud-firestore &&
-        python integration_tests/seed_firestore_emulator.py
+        sh integration_tests/wait_for_firestore.sh &&
+                python integration_tests/seed_firestore_emulator.py
       "
 
   orders_listener:
@@ -99,6 +101,7 @@ services:
     command: >
       sh -lc "
         pip install --no-cache-dir google-cloud-firestore requests &&
+        sh /workspace/integration_tests/wait_for_firestore.sh &&
         python bridge.py
       "
 
