@@ -62,7 +62,10 @@ jobs:
             -var="SMTP_FROM=${{ secrets.SMTP_FROM }}" \
             -var="SMTP_USE_TLS=${{ secrets.SMTP_USE_TLS }}" \
             -var="SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}" \
-            -var="jwt_expires_minutes=${{ secrets.JWT_EXPIRES_MINUTES }}"
+            -var="jwt_expires_minutes=${{ secrets.JWT_EXPIRES_MINUTES }}" \
+            -var="project_id=${{ secrets.JWT_EXPIRES_MINUTES }}" \
+            -var="region=${{ secrets.REGION }}" \ 
+            -var="app_name=${{ secrets.APP_NAME }}"
 
       - name: Verify Cloud Run deployment
         run: |
