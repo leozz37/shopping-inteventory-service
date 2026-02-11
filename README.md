@@ -30,7 +30,26 @@ A simple Inventory API that covers user registration, authentication (JWT), heal
 - [Notebook Demo](#notebook-demo)
 - [Environment Variables](#environment-variables)
 
-## ✅ Requirements
+## Overview
+
+This is a high-level view of the architecture:
+
+![arch](./docs/resources/architecture-design.png)
+
+This project exposes a REST API for:
+
+- Health checking the service
+- Registering new users
+- Authenticating users and issuing JWTs
+- Placing orders
+
+The API is fully described using **OpenAPI 3.0**, and the infrastructure can be provisioned automatically using **Terraform**. The whole infrasctructure can be replicated locally using docker compose!
+
+This is a high-level view of the ci-cd pipelines for building and deploying the project:
+
+![cicd](./docs/resources/architecture-cicd.png)
+
+## Requirements
 
 Before getting started, make sure you have the following installed:
 
@@ -60,17 +79,6 @@ uv --version
 docker --version
 terraform version
 ```
-
-## Overview
-
-This project exposes a REST API for:
-
-- Health checking the service
-- Registering new users
-- Authenticating users and issuing JWTs
-- Placing orders
-
-The API is fully described using **OpenAPI 3.0**, and the infrastructure can be provisioned automatically using **Terraform**.
 
 ## Tech Stack
 
