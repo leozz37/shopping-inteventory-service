@@ -1,0 +1,71 @@
+name: Deploy to GCP
+
+on:
+  workflow_run:
+    workflows: ["Docker Image"]
+    types: ["completed"]
+    branches: ["main"]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    # Only run if docker-image workflow succeeded
+    if: github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Build orders_listener zip
+        run: |
+          echo "Building orders_listener Cloud Function zip"
+          mkdir -p dist
+          cd services/orders_listener/src && zip -r ../../../dist/orders_listener.zip . > /dev/null
+          echo "Created dist/orders_listener.zip"
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Terraform Init
+        working-directory: infra/terraform
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: infra/terraform
+        run: |
+          terraform apply -auto-approve \
+            -var-file=envs/dev/terraform.tfvars \
+            -var="api_image=${{ secrets.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.REGISTRY_NAME }}/inventory-api:${{ github.sha }}" \
+            -var="jwt_secret_value=${{ secrets.JWT_SECRET }}" \
+            -var="SMTP_HOST=${{ secrets.SMTP_HOST }}" \
+            -var="SMTP_PORT=${{ secrets.SMTP_PORT }}" \
+            -var="SMTP_USER=${{ secrets.SMTP_USER }}" \
+            -var="SMTP_FROM=${{ secrets.SMTP_FROM }}" \
+            -var="SMTP_USE_TLS=${{ secrets.SMTP_USE_TLS }}" \
+            -var="SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}" \
+            -var="jwt_expires_minutes=${{ secrets.JWT_EXPIRES_MINUTES }}"
+
+      - name: Verify Cloud Run deployment
+        run: |
+          gcloud run services describe inventory-api --region us-central1 \
+            --format="value(status.observedGeneration)"
