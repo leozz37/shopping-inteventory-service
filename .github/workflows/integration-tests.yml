@@ -39,7 +39,7 @@ jobs:
           cat integration_tests/firebase.json
 
       - name: Start docker compose
-        run: docker compose --project-directory "$GITHUB_WORKSPACE" -f integration_tests/docker-compose.yml up -d --build
+        run: docker compose -f integration_tests/docker-compose.yml up -d --build
 
       - name: Wait for services
         run: |
