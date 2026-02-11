@@ -49,6 +49,8 @@ This is a high-level view of the ci-cd pipelines for building and deploying the 
 
 ![cicd](./docs/resources/architecture-cicd.png)
 
+Check the [docs directory](./docs/) for more details and full documentation!
+
 ## Requirements
 
 Before getting started, make sure you have the following installed:
@@ -88,6 +90,18 @@ terraform version
 - Docker and Docker Compose
 - Terraform (IaC)
 - Local Firestore for testing
+
+## Documentation
+
+Comprehensive documentation is available in the `docs/` directory:
+
+- **[Architecture](docs/architecture.md)** – System design, components, data flows, tech stack, deployment model
+- **[API Reference](docs/api.md)** – Endpoint documentation, authentication, request/response examples
+- **[Orders Listener](docs/order_listener.md)** – Orders Listener function, bridge pattern, local setup, testing
+- **[Local Development](docs/local-dev.md)** – Setup prerequisites, running services, testing, debugging, IDE tips
+- **[Terraform & Infrastructure](docs/terraform.md)** – Infrastructure as code, configuration, deployment, state management
+- **[CI/CD with GitHub Actions](docs/cicd.md)** – GitHub Actions workflows, secrets, monitoring, troubleshooting
+- **[Runbooks & Operations](docs/runbooks.md)** – Deployment procedures, monitoring, scaling, disaster recovery, known issues
 
 ## Getting Started
 
