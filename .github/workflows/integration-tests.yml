@@ -29,6 +29,10 @@ jobs:
       - name: Install dependencies
         run: uv sync --dev
 
+      - name: Export requirements.txt
+        working-directory: services/api
+        run: uv export --format requirements-txt --output-file requirements.txt
+
       - name: Start docker compose
         run: docker compose up -d --build
 
