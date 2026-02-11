@@ -25,6 +25,7 @@ A simple Inventory API that covers user registration, authentication (JWT), heal
   - [Destroying Infrastructure](#destroying-infrastructure)
 - [Running Tests](#running-tests)
 - [Running Linters](#running-linters)
+- [Notebook Demo](#notebook-demo)
 - [Environment Variables](#environment-variables)
 
 ## ✅ Requirements
@@ -201,6 +202,10 @@ To format the code and adapt it to the linter:
 ```bash
 make format
 ```
+
+## Notebook Demo
+
+To try the API from a step-by-step notebook (health, register, login, place order, and Firestore seed), open [notebooks/inventory_api_from_swagger.ipynb](notebooks/inventory_api_from_swagger.ipynb).
 
 ## Environment Variables
 
