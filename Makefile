@@ -4,7 +4,8 @@ API_ROOT_DIR := services/api
 FUNCTION_DIR := services/functions/orders_listener
 TERRAFORM_DIR := infra/terraform
 PYTHON := uv run python
-ORDERS_FN_DIR := services/orders_listener
+ORDERS_ROOT_DIR := services/orders_listener
+ORDERS_FN_DIR := services/orders_listener/src
 ORDERS_FN_ZIP := dist/orders_listener.zip
 
 # Local DEV
@@ -14,8 +15,25 @@ install: # Install dependencies (uv)
 run: # Run FastAPI locally with reload
 	cd $(API_DIR) && uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
-test: # Run unit tests
-	cd $(API_ROOT_DIR) && uv run pytest . -v --cov=src --cov-report=term-missing
+.PHONY: test
+test: # Run all unit tests
+	COVERAGE_FILE=$(CURDIR)/.coverage \
+		cd $(API_ROOT_DIR) && uv run pytest tests/ -v --cov=src --cov-append
+	COVERAGE_FILE=$(CURDIR)/.coverage \
+		cd $(ORDERS_ROOT_DIR) && PYTHONPATH=src uv run pytest tests/ -v --cov=src --cov-append
+
+test-api: # Run unit tests for API (coverage appended to repo .coverage)
+	COVERAGE_FILE=$(CURDIR)/.coverage \
+		cd $(API_ROOT_DIR) && uv run pytest tests/ -v --cov=src --cov-append --cov-report=term-missing
+
+test-listener: # Run unit tests for orders listener (coverage appended to repo .coverage)
+	COVERAGE_FILE=$(CURDIR)/.coverage \
+		cd $(ORDERS_ROOT_DIR) && PYTHONPATH=src uv run pytest tests/ -v --cov=src --cov-append --cov-report=term-missing
+
+.PHONY: coverage-report
+coverage-report: # Generate coverage reports from combined .coverage
+	uv run coverage report -m
+	uv run coverage html
 
 lint: # Run linter (ruff)
 	cd $(API_DIR) && uv run ruff check .
