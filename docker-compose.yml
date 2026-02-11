@@ -27,6 +27,7 @@ services:
       - "8000:8080"
     environment:
       FIRESTORE_EMULATOR_HOST: firestore:8080
+      GRPC_DNS_RESOLVER: native
       GOOGLE_CLOUD_PROJECT: demo-inventory
       GCP_PROJECT_ID: demo-inventory
       JWT_SECRET: dev-secret
@@ -40,6 +41,7 @@ services:
       - firestore
     environment:
       FIRESTORE_EMULATOR_HOST: firestore:8080
+      GRPC_DNS_RESOLVER: native
       GOOGLE_CLOUD_PROJECT: demo-inventory
     volumes:
       - ./:/workspace
@@ -59,6 +61,7 @@ services:
       - "8081:8080"
     environment:
       FIRESTORE_EMULATOR_HOST: firestore:8080
+      GRPC_DNS_RESOLVER: native
       GCP_PROJECT_ID: demo-inventory
       ORDERS_COLLECTION: Orders
       PRODUCTS_COLLECTION: Products
@@ -86,6 +89,7 @@ services:
       - orders_listener
     environment:
       FIRESTORE_EMULATOR_HOST: firestore:8080
+      GRPC_DNS_RESOLVER: native
       GOOGLE_CLOUD_PROJECT: demo-inventory
       GCP_PROJECT_ID: demo-inventory
       ORDERS_COLLECTION: Orders
