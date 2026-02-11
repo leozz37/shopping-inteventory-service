@@ -1,6 +1,3 @@
-from fastapi import HTTPException
-
-
 def test_place_order_success(client, monkeypatch):
     def fake_place_order(buyer_email: str, product_id: str) -> bool:
         assert buyer_email == "leo@example.com"
