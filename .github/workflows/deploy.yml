@@ -48,7 +48,10 @@ jobs:
 
       - name: Terraform Init
         working-directory: infra/terraform
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config="bucket=shopping-inventory-service-tf-state" \
+            -backend-config="prefix=dev"
 
       - name: Terraform Apply
         working-directory: infra/terraform
