@@ -10,6 +10,7 @@
 [![Docker Release](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/docker-image.yml/badge.svg)](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/docker-image.yml)
 [![Deploy to GCP](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/deploy.yml/badge.svg)](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/deploy.yml)
 
+---
 
 A simple Inventory API that covers user registration, authentication (JWT), health checks, and order placement! API documented with OpenAPI (Swagger) and ready to run locally, with Docker Compose with local GCP infra, and provisioned via Terraform.
 
