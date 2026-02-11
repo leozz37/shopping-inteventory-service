@@ -128,20 +128,20 @@ This is ideally for testing all the components of the API and running the full s
 1. Run everything:
 
 ```bash
-docker-compose up --build
+docker compose -f integration_tests/docker-compose.yml up --build
 ```
 
 2. To stop everything:
 
 ```bash
-docker-compose down
+docker compose -f integration_tests/docker-compose.yml down
 ```
 
 ## Infrastructure with Terraform
 
 Terraform is used to provision the infrastructure required to run the Inventory API on Google Cloud Platform (for example: cloud resources, networking, container services, etc.).
 
-> Terraform files live in the infra/terraform/ directory.
+> Terraform files live in the terraform/ directory.
 
 Terraform Prerequisites:
 
@@ -157,7 +157,7 @@ terraform version
 Initializing Terraform:
 
 ```bash
-cd infra/terraform
+cd terraform
 terraform init
 ```
 
@@ -189,7 +189,7 @@ Run all tests:
 make test
 ```
 
-Run integration tests (brings up docker-compose, waits for API/orders_listener/MailHog, then exercises the full flow):
+Run integration tests (brings up docker compose, waits for API/orders_listener/MailHog, then exercises the full flow):
 
 ```bash
 make test-integration

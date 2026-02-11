@@ -2,7 +2,7 @@ PROJECT_NAME := inventory-platform
 API_DIR := services/api/src
 API_ROOT_DIR := services/api
 FUNCTION_DIR := services/functions/orders_listener
-TERRAFORM_DIR := infra/terraform
+TERRAFORM_DIR := terraform
 PYTHON := uv run python
 ORDERS_ROOT_DIR := services/orders_listener
 ORDERS_FN_DIR := services/orders_listener/src
@@ -48,6 +48,7 @@ export-reqs: # Export requirements.txt from lock file
 DOCKER_IMAGE := inventory-api
 DOCKERFILE := ./services/api/Dockerfile
 DOCKER_CONTEXT := .
+COMPOSE_FILE := integration_tests/docker-compose.yml
 
 docker-build: # Build API Docker image
 	docker build \
@@ -61,17 +62,18 @@ docker-run: # Run API container locally
 		--env-file .env \
 		$(DOCKER_IMAGE)
 
-docker-up: # Run API using docker-compose
-	docker-compose up --build
+docker-up: # Run API using docker compose
+	docker compose -f $(COMPOSE_FILE) up --build
 
-docker-down: # Stop docker-compose
-	docker-compose down
+docker-down: # Stop docker compose
+	docker compose -f $(COMPOSE_FILE) down
 
 .PHONY: test-integration
-test-integration: # Run docker-compose (if needed) and integration tests
-	@if [ -z "$$(docker-compose ps -q)" ]; then \
-		echo "Starting docker-compose..."; \
-		docker-compose up -d --build; \
+
+test-integration: # Run docker compose (if needed) and integration tests
+	@if [ -z "$$(docker compose -f $(COMPOSE_FILE) ps -q)" ]; then \
+		echo "Starting docker compose..."; \
+		docker compose -f $(COMPOSE_FILE) up -d --build; \
 	fi
 	@echo "Waiting for orders_listener..."
 	@i=0; \
@@ -88,7 +90,7 @@ test-integration: # Run docker-compose (if needed) and integration tests
 		sleep 1; \
 	done
 	pytest integration_tests -v
-	docker compose down
+	docker compose -f $(COMPOSE_FILE) down
 
 .PHONY: orders-fn-zip
 orders-fn-zip:
@@ -98,7 +100,7 @@ orders-fn-zip:
 	@echo "✅ Created $(ORDERS_FN_ZIP)"
 
 # Terraform
-TF_DIR := infra/terraform
+TF_DIR := terraform
 TF_VARS_DEV := envs/dev/terraform.tfvars
 
 .PHONY: tf-plan

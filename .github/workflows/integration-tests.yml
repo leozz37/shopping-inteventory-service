@@ -33,8 +33,13 @@ jobs:
         working-directory: services/api
         run: uv export --format requirements-txt --output-file requirements.txt
 
+      - name: Verify firebase.json
+        run: |
+          ls -la integration_tests/firebase.json
+          cat integration_tests/firebase.json
+
       - name: Start docker compose
-        run: docker compose up -d --build
+        run: docker compose --project-directory "$GITHUB_WORKSPACE" -f integration_tests/docker-compose.yml up -d --build
 
       - name: Wait for services
         run: |
@@ -72,18 +77,18 @@ jobs:
 
       - name: Compose logs on failure
         if: failure()
-        run: docker compose logs --no-color
+        run: docker compose -f integration_tests/docker-compose.yml logs --no-color
 
       - name: Firestore debug log on failure
         if: failure()
         run: |
           echo "--- docker compose ps ---"
-          docker compose ps
+          docker compose -f integration_tests/docker-compose.yml ps
           echo "--- firestore container log ---"
-          docker compose logs --no-color firestore || true
+          docker compose -f integration_tests/docker-compose.yml logs --no-color firestore || true
           echo "--- firestore-debug.log ---"
-          docker compose exec -T firestore sh -lc "ls -la /workspace && cat /workspace/firestore-debug.log" || true
+          docker compose -f integration_tests/docker-compose.yml exec -T firestore sh -lc "ls -la /workspace && cat /workspace/firestore-debug.log" || true
 
       - name: Stop docker compose
         if: always()
-        run: docker compose down
+        run: docker compose -f integration_tests/docker-compose.yml down

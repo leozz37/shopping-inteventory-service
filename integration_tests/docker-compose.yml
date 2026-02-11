@@ -4,23 +4,21 @@ services:
     working_dir: /workspace
     command: >
       firebase emulators:start
-      --config /workspace/infra/local/firebase.json
-      --only firestore
+      --config /workspace/integration_tests/firebase.json
+      --only firestore,ui
       --project demo-inventory
+      --import=/workspace/.firebase-data
+      --export-on-exit
     ports:
       - "8080:8080"
       - "4000:4000"
-    environment:
-      FIREBASE_DEBUG: "true"
-      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx512m"
-    restart: on-failure
     volumes:
-      - ./:/workspace
+      - ..:/workspace
       - firestore_data:/workspace/.firebase-data
 
   api:
     build:
-      context: .
+      context: ..
       dockerfile: services/api/Dockerfile
     depends_on:
       - firestore
@@ -46,11 +44,11 @@ services:
       GRPC_DNS_RESOLVER: native
       GOOGLE_CLOUD_PROJECT: demo-inventory
     volumes:
-      - ./:/workspace
+      - ..:/workspace
     command: >
       sh -lc "
         pip install --no-cache-dir google-cloud-firestore &&
-        python infra/local/seed_firestore_emulator.py
+        python integration_tests/seed_firestore_emulator.py
       "
 
   orders_listener:
@@ -74,10 +72,10 @@ services:
       SMTP_FROM: "test@example.com"
       SMTP_USE_TLS: "false"
     volumes:
-      - ./:/workspace
+      - ..:/workspace
     command: >
       sh -lc "
-        pip install --no-cache-dir -r requirements.txt &&
+        pip install --no-cache-dir functions-framework==3.* google-cloud-firestore &&
         functions-framework --target=orders_listener_http --port=8080
       "
 
@@ -97,10 +95,10 @@ services:
       ORDERS_COLLECTION: Orders
       FUNCTIONS_URL: http://orders_listener:8080/
     volumes:
-      - ./:/workspace
+      - ..:/workspace
     command: >
       sh -lc "
-        pip install --no-cache-dir -r requirements.txt &&
+        pip install --no-cache-dir google-cloud-firestore requests &&
         python bridge.py
       "
 
