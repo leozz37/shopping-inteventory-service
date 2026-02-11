@@ -54,18 +54,18 @@ jobs:
         working-directory: infra/terraform
         run: |
           terraform apply -auto-approve \
-            -var="api_image=${{ secrets.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.REGISTRY_NAME }}/inventory-api:${{ github.sha }}" \
-            -var="jwt_secret_value=${{ secrets.JWT_SECRET }}" \
-            -var="SMTP_HOST=${{ secrets.SMTP_HOST }}" \
-            -var="SMTP_PORT=${{ secrets.SMTP_PORT }}" \
-            -var="SMTP_USER=${{ secrets.SMTP_USER }}" \
-            -var="SMTP_FROM=${{ secrets.SMTP_FROM }}" \
-            -var="SMTP_USE_TLS=${{ secrets.SMTP_USE_TLS }}" \
-            -var="SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}" \
-            -var="jwt_expires_minutes=${{ secrets.JWT_EXPIRES_MINUTES }}" \
-            -var="project_id=${{ secrets.JWT_EXPIRES_MINUTES }}" \
-            -var="region=${{ secrets.REGION }}" \ 
-            -var="app_name=${{ secrets.APP_NAME }}"
+            -var "project_id=${{ secrets.GCP_PROJECT_ID }}" \
+            -var "region=${{ secrets.GCP_REGION || 'us-central1' }}" \
+            -var "app_name=${{ secrets.APP_NAME || 'orders-api' }}" \
+            -var "api_image=${{ secrets.GCP_REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.REGISTRY_NAME }}/inventory-api:${{ github.sha }}" \
+            -var "jwt_secret_value=${{ secrets.JWT_SECRET }}" \
+            -var "jwt_expires_minutes=${{ secrets.JWT_EXPIRES_MINUTES || '60' }}" \
+            -var "SMTP_HOST=${{ secrets.SMTP_HOST }}" \
+            -var "SMTP_PORT=${{ secrets.SMTP_PORT }}" \
+            -var "SMTP_USER=${{ secrets.SMTP_USER }}" \
+            -var "SMTP_FROM=${{ secrets.SMTP_FROM }}" \
+            -var "SMTP_USE_TLS=${{ secrets.SMTP_USE_TLS }}" \
+            -var "SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}"
 
       - name: Verify Cloud Run deployment
         run: |
