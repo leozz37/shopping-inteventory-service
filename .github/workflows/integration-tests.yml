@@ -77,12 +77,12 @@ jobs:
       - name: Firestore debug log on failure
         if: failure()
         run: |
-          if [ -f firestore-debug.log ]; then
-            echo "--- firestore-debug.log ---"
-            cat firestore-debug.log
-          else
-            echo "firestore-debug.log not found"
-          fi
+          echo "--- docker compose ps ---"
+          docker compose ps
+          echo "--- firestore container log ---"
+          docker compose logs --no-color firestore || true
+          echo "--- firestore-debug.log ---"
+          docker compose exec -T firestore sh -lc "ls -la /workspace && cat /workspace/firestore-debug.log" || true
 
       - name: Stop docker compose
         if: always()

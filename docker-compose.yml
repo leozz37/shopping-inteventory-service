@@ -10,6 +10,9 @@ services:
     ports:
       - "8080:8080"
       - "4000:4000"
+    environment:
+      FIREBASE_DEBUG: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx512m"
     restart: on-failure
     volumes:
       - ./:/workspace
