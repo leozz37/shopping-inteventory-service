@@ -103,6 +103,17 @@ The API will be available at:
 http://localhost:8000
 ```
 
+### Local GCP Auth (optional)
+
+If you plan to push images or run Terraform against GCP, make sure `gcloud` is authenticated and the correct project is selected:
+
+```bash
+gcloud auth login
+gcloud auth application-default login
+gcloud config set project <your-project-id>
+gcloud auth configure-docker us-docker.pkg.dev
+```
+
 ### Running with Docker
 
 1. Regenerate the `requirements.txt` file from the `pyproject.toml`:
