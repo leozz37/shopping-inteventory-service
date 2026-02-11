@@ -87,7 +87,26 @@ jobs:
           echo "--- firestore container log ---"
           docker compose -f integration_tests/docker-compose.yml logs --no-color firestore || true
           echo "--- firestore-debug.log ---"
-          docker compose -f integration_tests/docker-compose.yml exec -T firestore sh -lc "ls -la /workspace && cat /workspace/firestore-debug.log" || true
+          FIRESTORE_ID=$(docker compose -f integration_tests/docker-compose.yml ps -q firestore)
+          if [ -n "$FIRESTORE_ID" ]; then
+            docker cp "$FIRESTORE_ID:/workspace/firestore-debug.log" firestore-debug.log || true
+            if [ -f firestore-debug.log ]; then
+              ls -la firestore-debug.log
+              cat firestore-debug.log
+            else
+              echo "firestore-debug.log not found in container"
+            fi
+          else
+            echo "firestore container not found"
+          fi
+
+      - name: Upload firestore debug log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: firestore-debug-log
+          path: firestore-debug.log
+          if-no-files-found: ignore
 
       - name: Stop docker compose
         if: always()
