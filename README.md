@@ -4,13 +4,9 @@
 [![Pytest Order Listener](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/orders-listener.yml/badge.svg)](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/orders-listener.yml)
 [![Integration Tests](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/integration-tests.yml)
 [![Terraform](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/terraform.yml/badge.svg)](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/terraform.yml)
-
----
-
 [![Docker Release](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/docker-image.yml/badge.svg)](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/docker-image.yml)
 [![Deploy to GCP](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/deploy.yml/badge.svg)](https://github.com/leozz37/shopping-inteventory-service/actions/workflows/deploy.yml)
-
----
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A simple Inventory API that covers user registration, authentication (JWT), health checks, and order placement! API documented with OpenAPI (Swagger) and ready to run locally, with Docker Compose with local GCP infra, and provisioned via Terraform.
 
@@ -109,7 +105,7 @@ http://localhost:8000
 
 ### Running with Docker
 
-1. Regenate the `requirements.txt` file from the `pyproject.toml`:
+1. Regenerate the `requirements.txt` file from the `pyproject.toml`:
 
 ```bash
 make export-reqs
@@ -130,6 +126,10 @@ make docker-run
 ### Running with Docker Compose
 
 This is ideally for testing all the components of the API and running the full stack locally. It will run a container for the API, a local Firebase and will populate the firebase with a Product item.
+
+Notes:
+- The local stack files live in `integration_tests/` (firebase.json, seed script, wait script, and compose file).
+- The Firestore emulator is installed at container startup (Node + Java), so the first run can take a few minutes and requires network access.
 
 1. Run everything:
 
@@ -176,8 +176,11 @@ terraform plan
 Applying Infrastructure:
 
 ```bash
-terraform apply
+make orders-fn-zip
+make tf-apply
 ```
+
+The Cloud Function bundle is expected at `dist/orders_listener.zip`.
 
 Destroying Infrastructure:
 
