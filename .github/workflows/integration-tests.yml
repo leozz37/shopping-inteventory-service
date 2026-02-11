@@ -38,6 +38,13 @@ jobs:
 
       - name: Wait for services
         run: |
+          echo "Waiting for Firestore emulator..."
+          for i in {1..60}; do
+            if nc -z localhost 8080 >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
           echo "Waiting for API health..."
           for i in {1..60}; do
             if curl -s http://localhost:8000/health >/dev/null 2>&1; then
@@ -66,6 +73,16 @@ jobs:
       - name: Compose logs on failure
         if: failure()
         run: docker compose logs --no-color
+
+      - name: Firestore debug log on failure
+        if: failure()
+        run: |
+          if [ -f firestore-debug.log ]; then
+            echo "--- firestore-debug.log ---"
+            cat firestore-debug.log
+          else
+            echo "firestore-debug.log not found"
+          fi
 
       - name: Stop docker compose
         if: always()
