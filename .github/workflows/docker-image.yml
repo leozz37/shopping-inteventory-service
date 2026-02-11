@@ -6,11 +6,37 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  REGISTRY: us-central1-docker.pkg.dev
+  IMAGE_NAME: inventory-api
+
 jobs:
-
-  build:
-
+  test:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -Ls https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        working-directory: services/api
+        run: uv sync
+
+      - name: Run tests
+        working-directory: services/api
+        run: uv run pytest tests/ -v
+
+  build-and-push:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -24,6 +50,27 @@ jobs:
         working-directory: services/api
         run: |
           uv export --format requirements-txt --output-file requirements.txt
-          
-      - name: Build the Docker image
-        run: docker build . --file ./services/api/Dockerfile --tag my-image-name:$(date +%s)
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.REGISTRY }}
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:latest \
+            -t ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -f ./services/api/Dockerfile .
+
+      - name: Push Docker image to Artifact Registry
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
