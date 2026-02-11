@@ -10,28 +10,18 @@ services:
     ports:
       - "8080:8080"
       - "4000:4000"
+    restart: on-failure
     volumes:
       - ./:/workspace
       - firestore_data:/workspace/.firebase-data
-    healthcheck:
-      test:
-        - CMD
-        - node
-        - -e
-        - "require('net').connect(8080,'127.0.0.1').on('connect',()=>process.exit(0)).on('error',()=>process.exit(1))"
-      interval: 2s
-      timeout: 2s
-      retries: 30
 
   api:
     build:
       context: .
       dockerfile: services/api/Dockerfile
     depends_on:
-      firestore:
-        condition: service_healthy
-      mailhog:
-        condition: service_started
+      - firestore
+      - mailhog
     ports:
       - "8000:8080"
     environment:
@@ -47,8 +37,7 @@ services:
     image: python:3.13-slim
     working_dir: /workspace
     depends_on:
-      firestore:
-        condition: service_healthy
+      - firestore
     environment:
       FIRESTORE_EMULATOR_HOST: firestore:8080
       GRPC_DNS_RESOLVER: native
@@ -65,10 +54,8 @@ services:
     image: python:3.13-slim
     working_dir: /workspace/services/orders_listener/src
     depends_on:
-      firestore:
-        condition: service_healthy
-      mailhog:
-        condition: service_started
+      - firestore
+      - mailhog
     ports:
       - "8081:8080"
     environment:
@@ -97,10 +84,8 @@ services:
     image: python:3.13-slim
     working_dir: /workspace/services/orders_listener/bridge
     depends_on:
-      firestore:
-        condition: service_healthy
-      orders_listener:
-        condition: service_started
+      - firestore
+      - orders_listener
     environment:
       FIRESTORE_EMULATOR_HOST: firestore:8080
       GRPC_DNS_RESOLVER: native
